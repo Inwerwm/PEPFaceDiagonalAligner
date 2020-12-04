@@ -1,17 +1,10 @@
-﻿using PEPlugin;
+﻿using PEPExtensions;
+using PEPlugin;
 using PEPlugin.Pmx;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using PEPExtensions;
-using KdTree;
-using KdTree.Math;
 
 namespace FaceDiagonalAligner
 {
@@ -38,12 +31,14 @@ namespace FaceDiagonalAligner
             // OutOfRange対策付き
 
             int selectTmp = listBoxSourceMaterial.SelectedIndex;
-            listBoxSourceMaterial.Items.AddRange(Pmx.Material.ToArray());
+            listBoxSourceMaterial.Items.Clear();
+            listBoxSourceMaterial.Items.AddRange(Pmx.Material.Select(m => new MaterialData(m)).ToArray());
             if (listBoxSourceMaterial.Items.Count > selectTmp)
                 listBoxSourceMaterial.SelectedIndex = selectTmp;
 
             selectTmp = listBoxTargetMaterial.SelectedIndex;
-            listBoxTargetMaterial.Items.AddRange(Pmx.Material.ToArray());
+            listBoxTargetMaterial.Items.Clear();
+            listBoxTargetMaterial.Items.AddRange(Pmx.Material.Select(m => new MaterialData(m)).ToArray());
             if (listBoxTargetMaterial.Items.Count > selectTmp)
                 listBoxTargetMaterial.SelectedIndex = selectTmp;
         }

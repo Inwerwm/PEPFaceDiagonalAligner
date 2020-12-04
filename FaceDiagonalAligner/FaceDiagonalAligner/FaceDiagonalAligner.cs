@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using PEPExtensions;
 using PEPlugin;
-using PEPExtensions;
+using System;
 
 namespace FaceDiagonalAligner
 {
