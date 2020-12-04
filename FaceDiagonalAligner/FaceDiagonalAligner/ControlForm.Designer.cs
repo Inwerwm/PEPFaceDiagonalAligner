@@ -145,6 +145,7 @@ namespace FaceDiagonalAligner
             this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "ControlForm";
             this.Text = "ControlForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ControlForm_FormClosing);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);

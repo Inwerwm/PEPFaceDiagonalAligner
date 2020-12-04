@@ -55,5 +55,16 @@ namespace FaceDiagonalAligner
         {
             LoadPmx();
         }
+
+        private void ControlForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                // クローズキャンセル
+                e.Cancel = true;
+                // フォームを非表示設定
+                this.Visible = false;
+            }
+        }
     }
 }
