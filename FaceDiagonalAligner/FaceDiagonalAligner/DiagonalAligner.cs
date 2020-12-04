@@ -190,9 +190,10 @@ namespace FaceDiagonalAligner
 
                 // 複数の面に共有されている外側頂点とその面番号のグループ
                 var sharedOuterTargetVertexGroups = outerTargetVertices.GroupBy(v => v.outerVertex).Where(group => group.Count() > 1);
-                // 想定では上のコレクションは要素数が1のはずなので、1超の要素数を持った場合は例外を投げる
+                // 想定では上のコレクションは要素数が1のはずなので、1超の要素数を持った場合はcontinue
                 if (sharedOuterTargetVertexGroups.Count() > 1)
-                    throw new InvalidOperationException($"想定外の状況が発生しました：{Environment.NewLine}外側頂点を共有した面のグループが複数得られました。");
+                    continue;
+                    //throw new InvalidOperationException($"想定外の状況が発生しました：{Environment.NewLine}外側頂点を共有した面のグループが複数得られました。");
 
                 // 対角面を確定
                 var diagonalFaces = sharedOuterTargetVertexGroups
