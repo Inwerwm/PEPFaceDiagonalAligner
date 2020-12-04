@@ -5,8 +5,6 @@ using PEPlugin.Pmx;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FaceDiagonalAligner
 {
@@ -34,7 +32,7 @@ namespace FaceDiagonalAligner
         /// <param name="values">木を構築するコレクション</param>
         /// <param name="converter">コレクションの各要素から座標を取り出す方法</param>
         /// <returns>構築されたkd木</returns>
-        private KdTree<TKey, TValue> MakeTree<TKey,TValue>(int dimension,ITypeMath<TKey> math,IEnumerable<TValue> values,Func<TValue,TKey[]> converter)
+        private KdTree<TKey, TValue> MakeTree<TKey, TValue>(int dimension, ITypeMath<TKey> math, IEnumerable<TValue> values, Func<TValue, TKey[]> converter)
         {
             var tree = new KdTree<TKey, TValue>(dimension, math, AddDuplicateBehavior.List);
             foreach (var element in values)
@@ -51,7 +49,7 @@ namespace FaceDiagonalAligner
         /// <param name="a">比較するコレクション</param>
         /// <param name="b">比較するコレクション</param>
         /// <returns>同じならtrue</returns>
-        private bool CombinationCompare<T,TElement>(IEnumerable<T> a, IEnumerable<T> b) where T:IEnumerable<TElement>
+        private bool CombinationCompare<T, TElement>(IEnumerable<T> a, IEnumerable<T> b) where T : IEnumerable<TElement>
         {
             return a.Aggregate(true, (sum, elm) => sum && b.Any(e => e.SequenceEqual(elm)))
                 && b.Aggregate(true, (sum, elm) => sum && a.Any(e => e.SequenceEqual(elm)));
@@ -82,7 +80,7 @@ namespace FaceDiagonalAligner
         /// </summary>
         /// <param name="face1">入れ替え面1</param>
         /// <param name="face2">入れ替え面2</param>
-        private void ReplaceDiagonal(IPXFace face1,IPXFace face2)
+        private void ReplaceDiagonal(IPXFace face1, IPXFace face2)
         {
             /* 例:
              * 
@@ -145,11 +143,11 @@ namespace FaceDiagonalAligner
             foreach ((IPXFace Face, bool IsAligned) pivot in SourceMaterial.Faces.Select(f => (f, false)))
             {
                 // 現在の面がすでに整列済みであった場合
-                if (pivot.IsAligned) 
+                if (pivot.IsAligned)
                     continue;
 
                 // 現在の基準材質側の面の構成頂点それぞれに最も近い編集材質側の頂点を取得
-                var nearestNodes = new KdTreeNode<float,IPXVertex>[] {
+                var nearestNodes = new KdTreeNode<float, IPXVertex>[] {
                     targetVerticesTree.GetNearestNeighbours(pivot.Face.Vertex1.Position.ToArray(),1)[0],
                     targetVerticesTree.GetNearestNeighbours(pivot.Face.Vertex2.Position.ToArray(),1)[0],
                     targetVerticesTree.GetNearestNeighbours(pivot.Face.Vertex3.Position.ToArray(),1)[0],
@@ -164,7 +162,7 @@ namespace FaceDiagonalAligner
                     );
 
                 // 全ての頂点が同一位置でないなら対応を取れないので次の面へ
-                if (!isPositionOverlap) 
+                if (!isPositionOverlap)
                     continue;
 
                 // 取得した近傍頂点の内少なくとも2点を構成要素としてもつ編集側の面を取得
@@ -176,7 +174,7 @@ namespace FaceDiagonalAligner
 
                     return (vertex1IsContained && vertex2IsContained) ||
                            (vertex2IsContained && vertex3IsContained) ||
-                           (vertex3IsContained && vertex1IsContained) ;
+                           (vertex3IsContained && vertex1IsContained);
                 });
 
                 // 取得した編集側頂点で構成される面が存在すれば対角線は整合しているので次の面へ
@@ -200,9 +198,10 @@ namespace FaceDiagonalAligner
                 var diagonalFaces = sharedOuterTargetVertexGroups
                     .SelectMany(group => group.Select(v => v.i))
                     .Select(i => edgeSharingTargetFaces.ElementAt(i));
-                // 対角面のためdiagonalFacesの要素数は2のはずなので、異なった場合は例外を投げる
-                if(diagonalFaces.Count() != 2)
-                    throw new InvalidOperationException($"想定外の状況が発生しました：{Environment.NewLine}確定した対角面コレクションの要素数が2と違います。");
+                // 対角面のためdiagonalFacesの要素数は2のはずなので、異なった場合はcontinue
+                if (diagonalFaces.Count() != 2)
+                    continue;
+                //throw new InvalidOperationException($"想定外の状況が発生しました：{Environment.NewLine}確定した対角面コレクションの要素数が2と違います。");
 
                 //対角線を入れ替え
                 ReplaceDiagonal(diagonalFaces.First(), diagonalFaces.Last());
